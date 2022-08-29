@@ -1,0 +1,60 @@
+﻿@page "/pessoas"
+@using Desafio.Data;
+@inject PessoaService service;
+
+<NavLink class="nav-link" href="add">
+    <span class="oi oi-plus" aria-hidden="true"></span>Adicionar
+</NavLink>
+<h1>Informações das Pessoas:</h1>
+@if (pessoas == null)
+{
+    <p><em>Carregando...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Data de Nascimento</th>
+                <th>Idade</th>
+                <th>Cidade</th>
+                <th>Estado</th>
+                <th>Telefone</th>
+                <th>Cadastrado em</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Pessoa pessoa in pessoas)
+            {
+                <tr>
+                    <td>@pessoa.NomeCompleto</td>
+                    <td>@pessoa.DataNascimento</td>
+                    <td>@pessoa.Idade</td>
+                    <td>@pessoa.Cidade</td>
+                    <td>@pessoa.Estado</td>
+                    <td>@pessoa.Telefone</td>
+                    <td>@pessoa.DataCadastro</td>
+                    <td>
+                        <a class="nav-link" href="edit/@pessoa.Id">
+                            <span class="oi oi-pencil" aria-hidden="true"></span>Editar
+                        </a>
+                        <a class="nav-link" href="delete/@pessoa.Id">
+                            <span class="oi oi-trash" aria-hidden="true"></span>Deletar
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code {
+    List<Pessoa> pessoas;
+
+    protected override async Task OnInitializedAsync()
+    {
+        pessoas = await Task.Run(() => service.GetAll());
+    }
+}

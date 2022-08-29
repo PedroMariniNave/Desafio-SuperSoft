@@ -1,0 +1,45 @@
+﻿@page "/delete/{CurrentID}"
+@using Desafio.Data
+@inject PessoaService service
+@inject NavigationManager navigationManager
+<h2>Apagar Pessoa</h2>
+<hr />
+<h3>Tem certeza que deseja apagar esse registro?</h3>
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <label>Id do Autor: </label>
+            <label>@pessoa.Id</label>
+        </div>
+        <div class="form-group">
+            <label>Nome: </label>
+            <label>@pessoa.NomeCompleto</label>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="form-group">
+            <input type="button" class="btn btn-danger" @onclick="@DeletePessoa" value="Apagar" />
+            <input type="button" class="btn btn-primary" @onclick="@Cancel" value="Cancelar" />
+        </div>
+    </div>
+</div>
+@code {
+    [Parameter] public string CurrentId { get; set; }
+    Pessoa pessoa = new Pessoa();
+    protected override async Task OnInitializedAsync()
+    {
+        pessoa = await Task.Run(() => service.GetById(Convert.ToInt32(CurrentId)));
+    }
+    
+    protected void DeletePessoa()
+    {
+        service.Delete(pessoa);
+        navigationManager.NavigateTo("pessoas");
+    }
+    void Cancel()
+    {
+        navigationManager.NavigateTo("pessoas");
+    }
+}
